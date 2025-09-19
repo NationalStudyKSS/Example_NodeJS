@@ -153,26 +153,17 @@ app.post('/login', function (req, res, err) {
 });
 
 // Ranking
-app.post('/ranking10', function (req, res, err) {
+app.get('/ranking10', function (req, res) {
+    let rankingQuery = "SELECT UserID, Score FROM userdata ORDER BY Score DESC LIMIT 10";
 
-    if (req.body.user) {
-        console.log(req.body);
-        let rankingQuery = "SELECT UserID, Score FROM userdata ORDER BY Score DESC LIMIT 10";
-        let param = [];
-
-        conn.query(rankingQuery, param, function (err, row, fields) {
-            if (!err) {
-                res.send(row);
-            }
-            else {
-                console.log(err);
-                res.send(err);
-            }
-        });
-    }
-    else {
-        res.send("UserID or UserPW missing");
-    }
+    conn.query(rankingQuery, function (err, row) {
+        if (!err) {
+            res.send(row);
+        } else {
+            console.log(err);
+            res.status(500).send(err);
+        }
+    });
 });
 
 //app.post('/new', function (req, res) {
